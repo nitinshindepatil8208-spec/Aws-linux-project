@@ -37,36 +37,92 @@ Note: Prometheus requires appropriate scrape configuration
 and exporters to collect server metrics.
 
 ## 5. Apache Installation
+## Install Grafana on Ubuntu
 
-Update Ubuntu packages:
+### Step 1: Install Required Packages
 
 ```bash
+sudo apt-get update
+sudo apt-get install -y apt-transport-https wget gnupg
+```
+
+### Step 2: Add Grafana GPG Key
+
+```bash
+sudo mkdir -p /etc/apt/keyrings
+sudo wget -O /etc/apt/keyrings/grafana.asc https://apt.grafana.com/gpg-full.key
+sudo chmod 644 /etc/apt/keyrings/grafana.asc
+```
+
+### Step 3: Add Grafana Repository
+
+```bash
+echo "deb [signed-by=/etc/apt/keyrings/grafana.asc] https://apt.grafana.com stable main" | sudo tee /etc/apt/sources.list.d/grafana.list
+```
+
+### Step 4: Install Grafana
+
+```bash
+sudo apt-get update
+sudo apt-get install -y grafana
+```
+
+### Step 5: Start and Enable Grafana
+
+```bash
+sudo systemctl enable --now grafana-server
+```
+
+### Step 6: Verify Grafana Service
+
+```bash
+sudo systemctl status grafana-server
+```
+
+Check the installed version:
+
+```bash
+grafana-server -v
+```
+
+### Step 7: Access Grafana
+
+Open your browser and visit:
+
+```text
+http://localhost:3000
+```
+
+If Grafana is installed on a remote server, use:
+
+```text
+http://YOUR_SERVER_IP:3000
+```
+
+### Step 8: Configure Prometheus Data Source
+
+1. Log in to Grafana.
+2. Navigate to **Connections → Data sources**.
+3. Select **Add data source → Prometheus**.
+4. Enter the URL:
+
+   `http://localhost:9090`
+
+5. Click **Save & test**.
+
+#**Steps for  Installing Prometheus on Ubuntu**
+(Metrics/logs collector) 
+1️⃣ Update system
 sudo apt update
-```
+sudo apt upgrade -y
 
-Install Apache:
+2️⃣ Install Prometheus and Node Exporter
+sudo apt install prometheus prometheus-node-exporter -y
 
-```bash
-sudo apt install apache2 -y
-```
-
-Start and enable Apache:
-
-```bash
-sudo systemctl enable --now apache2
-```
-
-Check Apache status:
-
-```bash
-sudo systemctl status apache2
-```
-
-Test the web server:
-
-```bash
-curl -I http://localhost
-```
+3️⃣  Start and enable Prometheus services
+sudo systemctl enable --now prometheus prometheus-node-exporter
+4. Check if Prometheus is running:
+systemctl status prometheus
 
 ## 6. Linux Commands
 
